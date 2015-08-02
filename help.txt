@@ -1,0 +1,135 @@
+﻿1.基于MySQL的多肽管理系统（面向过程）
+
+---数据库：WJLiBBS
+mysql> create database WJLiBBS;
+mysql> use WJLiBBS
+Database changed
+
+---数据表：user, peptide, logs
+CREATE TABLE `user` (
+  `uid` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+  `username` char(15) NOT NULL DEFAULT '',
+  `password` char(32) NOT NULL DEFAULT '',
+  `email` varchar(40) NOT NULL DEFAULT '',
+  `regdate` int(10) unsigned NOT NULL DEFAULT '0',
+  `lastlogin` int(10) unsigned NOT NULL DEFAULT '0',
+  `usergroup` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`uid`)
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+---增加字段：session_id，防止同一个用户在两个地点同时登陆。
+mysql> alter table user add column session_id char(30) not null;
+Query OK, 6 rows affected (0.31 sec)
+Records: 6  Duplicates: 0  Warnings: 0
+
+-- 修改权限
+mysql> update user set usergroup=4 where uid=1;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> desc user;
++-----------+-----------------------+------+-----+---------+----------------+
+| Field     | Type                  | Null | Key | Default | Extra          |
++-----------+-----------------------+------+-----+---------+----------------+
+| uid       | mediumint(8) unsigned | NO   | PRI | NULL    | auto_increment |
+| username  | char(15)              | NO   |     |         |                |
+| password  | char(32)              | NO   |     |         |                |
+| email     | varchar(40)           | NO   |     |         |                |
+| regdate   | int(10) unsigned      | NO   |     | 0       |                |
+| lastlogin | int(10) unsigned      | NO   |     | 0       |                |
+| usergroup | int(10) unsigned      | NO   |     | 0       |                |
++-----------+-----------------------+------+-----+---------+----------------+
+7 rows in set (0.02 sec)
+
+
+CREATE TABLE `peptide` (
+  `pid` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+  `uid` mediumint(8) unsigned NOT NULL,
+  `peptidename` char(40) NOT NULL DEFAULT '',
+  `peptideseq` char(40) NOT NULL DEFAULT '',
+  `protein` char(40) NOT NULL DEFAULT '',
+  `method` char(40) NOT NULL DEFAULT '',
+  `note` text,
+  `submitdate` int(10) unsigned NOT NULL DEFAULT '0',
+  `modifydate` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`pid`)
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+mysql> desc peptide;
++-------------+-----------------------+------+-----+---------+----------------+
+| Field       | Type                  | Null | Key | Default | Extra          |
++-------------+-----------------------+------+-----+---------+----------------+
+| pid         | mediumint(8) unsigned | NO   | PRI | NULL    | auto_increment |
+| uid         | mediumint(8) unsigned | NO   |     | NULL    |                |
+| peptidename | char(40)              | NO   |     |         |                |
+| peptideseq  | char(40)              | NO   |     |         |                |
+| protein     | char(40)              | NO   |     |         |                |
+| method      | char(40)              | NO   |     |         |                |
+| note        | text                  | YES  |     | NULL    |                |
+| submitdate  | int(10) unsigned      | NO   |     | 0       |                |
+| modifydate  | int(10) unsigned      | NO   |     | 0       |                |
++-------------+-----------------------+------+-----+---------+----------------+
+9 rows in set (0.05 sec)
+
+
+CREATE TABLE `logs` (
+  `lid` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+  `uid` mediumint(8) unsigned NOT NULL,
+  `action` int(10) NOT NULL DEFAULT 0,
+  `logdate` int(10) unsigned NOT NULL DEFAULT '0',
+  `lognote` text,
+  PRIMARY KEY (`lid`)
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+mysql> desc logs;
++---------+-----------------------+------+-----+---------+----------------+
+| Field   | Type                  | Null | Key | Default | Extra          |
++---------+-----------------------+------+-----+---------+----------------+
+| lid     | mediumint(8) unsigned | NO   | PRI | NULL    | auto_increment |
+| uid     | mediumint(8) unsigned | NO   |     | NULL    |                |
+| action  | int(10)               | NO   |     | 0       |                |
+| logdate | int(10) unsigned      | NO   |     | 0       |                |
+| lognote | text                  | YES  |     | NULL    |                |
++---------+-----------------------+------+-----+---------+----------------+
+5 rows in set (0.02 sec)
+
+
+2.文件结构:
+|-menu.php //公共菜单（浏览、增加条目、登陆、退出、操作日志），css表
+|
+|-index.php //显示帖子列表，点击查看内容
+|	 根据帖子id显示帖子内容；
+|	根据用户分组，确定是否有删除权限：
+	- 不登录不能进行任何操作；
+	- 登陆能查看所有数据；
+	- 登陆用户能修改、删除自己的数据；
+	- 管理员用户能修改、删除任何用户的数据，但是删改其他用户数据需要输入确认密码；
+	- 超级管理员用户能增删用户，并赋予和收回权限。
+	- 所有用户操作（登陆、增加、删除、修改等都有记录），该记录对所有用户可见，且分页显示。
+|-add.php//发布帖子界面，调用action.php执行写入文件
+|
+|-edit.php //修改帖子界面，调用action.php执行写入文件
+|
+|-action.php //执行登录，执行文件的增、删、改
+|
+|--bin //支持文件夹
+  |
+  |-function.php //自定义php函数
+  |
+  |-conn.php //定义MySQL数据库连接
+
+
+
+描述：
+（1）实现了基于MYSQL的留言板，能浏览标题，点击查看内容；
+（2）对留言条目的增、删、改功能；
+（3）用户权限系统；
+（4）对删除做了js提示；
+（5）使用配置文件定义文本文件名，便于修改；
+
+
+缺点：
+（1）没有美化页面
+（2）没有分页；
+（3）使用的面向过程，代码重用率不高；
+http://firecloudphp.blog.163.com/blog/static/250822070201562645725885/
