@@ -7,7 +7,6 @@ if(!isset($_SESSION["username"])){
 }
 
 //如果登陆成功，则根据用户权限，显示相应条目
-include("./bin/conn.php");
 //sql语句
 $rs = mysql_query("select * from peptide order by submitdate", $conn);
 

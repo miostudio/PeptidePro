@@ -1,7 +1,8 @@
 ﻿<?php
 //session_start();
+//包含数据库连接文件
 include('menu.php');
-include_once('./bin/function.php');
+
 
 //检测是否登录，若没登录则转向登录界面
 if(!isset($_SESSION['usergroup'])){
@@ -11,8 +12,7 @@ if(!isset($_SESSION['usergroup'])){
 	die("<center><p class=red>您无权查看该页面!</p>请返回 <a href='mycenter.php'> 用户中心</a></center>");
 }
 
-//包含数据库连接文件
-include_once('./bin/conn.php');
+
 
 $rs = mysql_query("select * from user order by uid");
 echo '<div class=wrap>';

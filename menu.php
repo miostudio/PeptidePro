@@ -12,7 +12,7 @@
 <meta name="googlebot" content="none" />
 
 <?php 
-	include_once("./bin/function.php");
+	include_once("./common/config.php");
 	
 	//强制清除缓存
 	header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
@@ -38,7 +38,6 @@
 		
 		//检查是否在其他地方登陆？如果ssession_id不同，则退出当前登陆
 		//设置session_id
-		include_once("./bin/function.php");
 		$ss=new mySession();
 		//echo "last:",$ss->get();
 		if( ($ss->get())!=session_id()){

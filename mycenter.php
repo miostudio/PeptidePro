@@ -1,7 +1,7 @@
 ﻿<?php
-//session_start();
+//包含数据库连接文件
 include('menu.php');
-include_once('./bin/function.php');
+
 
 //检测是否登录，若没登录则转向登录界面
 if(!isset($_SESSION['uid'])){
@@ -9,8 +9,7 @@ if(!isset($_SESSION['uid'])){
 	exit();
 }
 
-//包含数据库连接文件
-include_once('./bin/conn.php');
+
 
 $uid = $_SESSION['uid'];
 $username = $_SESSION['username'];

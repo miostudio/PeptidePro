@@ -1,13 +1,10 @@
 ﻿<?php
 include("menu.php");
-include_once("./bin/conn.php");
-include_once("./bin/function.php");
 
-?>
 
-<div class=wrap>
+ echo '<div class=wrap>';
 
-<?php
+
 //如果没有登陆，则提示登陆；
 if(!isset($_SESSION["username"])){
 	die("<center><p class=red>未登录用户没有访问权限！</p>请先 <a href='login.php'>登陆</a> 系统。</center>");
@@ -20,8 +17,6 @@ if(!isset($_SESSION["username"])){
 //$itemPerPage=5;
 
 //获取记录总数
-//包含数据库连接文件
-if(!isset($conn)){ include('./bin/conn.php'); }
 $rows=mysql_query("select count(*) from logs"); 
 $num=mysql_fetch_array($rows)[0]; 
  

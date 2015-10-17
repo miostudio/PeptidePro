@@ -2,7 +2,7 @@
 //这是后台操作处理的页面，没有可显示内容；
 session_start();
 
-include_once("./bin/function.php");
+include("./common/config.php");
 
 //注销登录
 if(!empty($_GET['a'])){
@@ -44,7 +44,6 @@ if(isset($_POST["submit2"]) and isset($_POST["pid"]) ){
 	$oriUid=getUserNameById( getUidByPid($pid) );
 	
 	//写入数据库
-	include_once("./bin/conn.php");
 	$sql = " delete from peptide where pid={$pid};";
 	$rs = mysql_query($sql);
 	
@@ -79,8 +78,6 @@ switch ($_GET['a']){
 		//对密码加密
 		$password = MD5($_POST['password']);
 
-		//包含数据库连接文件
-		include('./bin/conn.php');
 		//检测用户名及密码是否正确
 		$check_query = mysql_query("select * from user where username='$username' and password='$password' limit 1");
 		if($result = mysql_fetch_array($check_query)){
@@ -92,7 +89,6 @@ switch ($_GET['a']){
 			
 			
 			//设置session_id
-			include_once("./bin/function.php");
 			$ss=new mySession();
 			$ss->set();
 			
@@ -125,8 +121,7 @@ switch ($_GET['a']){
 		if(!preg_match('/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/', $email)){
 			exit('错误：电子邮箱格式错误。<a href="javascript:history.back(-1);">返回</a>');
 		}
-		//包含数据库连接文件
-		include_once('./bin/conn.php');
+
 		//检测用户名是否已经存在
 		$check_query = mysql_query("select uid from user where username='$username' limit 1");
 		if(mysql_fetch_array($check_query)){
@@ -177,7 +172,6 @@ switch ($_GET['a']){
 		$submitdate=time();
 
 		//写入数据库
-		include_once("./bin/conn.php");
 		$sql = "INSERT INTO peptide(uid,peptidename,peptideseq,protein,method,submitdate,modifydate,note)VALUES({$_SESSION['uid']},'$peptidename','$peptideseq','$protein','$method','$submitdate','$submitdate','$note')";
 		//TODO
 		$rs = mysql_query($sql);
@@ -214,7 +208,6 @@ switch ($_GET['a']){
 		$modifydate=time();
 
 		//写入数据库
-		include_once("./bin/conn.php");
 		$sql = "update  peptide set peptidename='$peptidename', peptideseq='$peptideseq', protein='$protein', method='$method' ,modifydate=$modifydate, note='$note' where pid='$pid'";
 		//TODO:
 		$rs = mysql_query($sql);
