@@ -1,9 +1,9 @@
 ﻿<?php
+	include_once("./common/config.php");
 //删除条目
 if(isset($_GET['pid'])){
 	$pid=$_GET['pid'];
 	//删除数据
-	include_once("./bin/conn.php");
 
 	// delete from user where uid=3;
 	$sql = "delete from peptide where pid=".$pid.";";

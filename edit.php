@@ -17,7 +17,7 @@ if(!isset($_GET['pid'])){
 //获得pid
 $pid=$_GET['pid'];
 //由pid获得uid
-include_once("./bin/function.php");//引入自定义函数
+//引入自定义函数 at menu.php
 $oriUid=getUidByPid($pid);
 if($oriUid==null){
 	die("没有找到该肽的提交者！返回 <a href='index.php'>首页</a>");
@@ -32,7 +32,6 @@ if($_SESSION["uid"]!=$oriUid){
 
 
 //获取多肽信息
-include_once("./bin/conn.php");
 $rs = mysql_query("select * from peptide where pid={$pid} limit 1");
 $row = mysql_fetch_array($rs);
 if(!$row){
