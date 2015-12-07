@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 	include_once("./common/config.php");
 //删除条目
 if(isset($_GET['pid'])){

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 	include("menu.php");
 	
 //检测是否登录，若没登录则转向登录界面

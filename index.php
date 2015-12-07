@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 include("menu.php");
 
 //如果没有登陆，则提示登陆；

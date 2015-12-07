@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 //session_start();
 //包含数据库连接文件
 include('menu.php');

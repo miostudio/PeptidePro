@@ -1,9 +1,9 @@
-﻿<?php
- //这是函数库和常量定义
- 
+<?php
+//这是函数库和常量定义
+
 //设置每页记录条数,
 $itemPerPage=50;
- 
+
 //定义用户权限
 $adminGroup=array(0=>"锁定用户",1=>"未审核用户",2=>"注册用户",3=>"管理员",4=>"超级管理员",);
 
@@ -27,11 +27,10 @@ $logAction=array(
 function doLogs($action,$lognote=" "){
 	$uid=$_SESSION["uid"];
 	$logdate=time();
-	include("conn.php");//包含数据库连接
 	//执行数据库
 	$sql="insert into logs(uid,action,logdate,lognote) values({$uid},{$action},{$logdate},'{$lognote}');";
 
-	$logsInsert = mysql_query($sql,$conn);
+	$logsInsert = mysql_query($sql);
 }
 
  /**
@@ -39,7 +38,7 @@ function doLogs($action,$lognote=" "){
  */
 function updateLastLgin($uid){
 	//包含数据库连接文件
-	include('conn.php');
+
 	//获取时间
 	$newTime=time();
 	//执行更新
@@ -55,12 +54,10 @@ function updateLastLgin($uid){
 由用户id得到用户名
 */
 function getUserNameById($uid){
-	include_once("conn.php");
 	$check_query = mysql_query("select username from user where uid={$uid} limit 1");
 	if($result = mysql_fetch_array($check_query)){
 		return $result["username"];
 	}
-	mysql_close($conn);
 	return null;
 }
 
@@ -71,12 +68,10 @@ function getUserNameById($uid){
 由pid得到peptidename
 */
 function getPeptideNameByPid($pid){
-	include_once("conn.php");
 	$check_query = mysql_query("select peptidename from peptide where pid={$pid} limit 1");
 	if($result = mysql_fetch_array($check_query)){
 		return $result["peptidename"];
 	}
-	mysql_close($conn);
 	return null;
 }
 
@@ -85,12 +80,10 @@ function getPeptideNameByPid($pid){
 由pid得到uid
 */
 function getUidByPid($pid){
-	include_once("conn.php");
 	$check_query = mysql_query("select uid from peptide where pid={$pid} limit 1");
 	if($result = mysql_fetch_array($check_query)){
 		return $result["uid"];
 	}
-	mysql_close($conn);
 	return null;
 }
 
@@ -100,15 +93,13 @@ function getUidByPid($pid){
 class mySession{
 	function get(){
 		$uid=$_SESSION["uid"];
-		
-		include_once("conn.php");
+
 		$check_query = mysql_query("select session_id from user where uid={$uid} limit 1");
 		if($result = mysql_fetch_array($check_query)){
 			return $result["session_id"];
 		}else{
 			echo "读取失败. ",mysql_error(),"<hr>";
 		}
-		mysql_close($conn);
 		return session_id;
 	}
 	
@@ -116,7 +107,6 @@ class mySession{
 		$uid=$_SESSION["uid"];
 		
 		$session_id=session_id();
-		include_once("conn.php");
 		//update user set usergroup=4 where uid=1;
 		$check_query = mysql_query("update user set session_id='{$session_id}' where uid={$uid}");
 		if(!mysql_error()){
@@ -125,7 +115,6 @@ class mySession{
 			echo "写入失败. ",mysql_error(),"<hr>";
 			return false;
 		}
-		mysql_close($conn);
 	}
 }
 
